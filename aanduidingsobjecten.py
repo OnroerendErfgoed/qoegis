@@ -5,6 +5,19 @@ from qgis.core import *
 from qgis.gui import *
 
 @qgsfunction(args='auto', group='Custom')
+def get_aanduidingstype(url, feature, parent):
+    cj = browsercookie.firefox()
+    e_obj = requests.get(url, headers={'Accept': 'application/json'}, cookies=cj).json()
+    mapping = {
+      "https://id.erfgoed.net/thesauri/aanduidingstypes/11": "Vastgestelde inventaris van de archeologische zones",
+      "https://id.erfgoed.net/thesauri/aanduidingstypes/10": "Vastgestelde landschapsatlas",
+	  "https://id.erfgoed.net/thesauri/aanduidingstypes/9": "Vastgestelde inventaris van het bouwkundig erfgoed",
+      "https://id.erfgoed.net/thesauri/aanduidingstypes/12": "Vastgestelde inventaris van houtige beplantingen met erfgoedwaarde",
+	  "https://id.erfgoed.net/thesauri/aanduidingstypes/13": "Vastgestelde inventaris van historische tuinen en parken"
+    }
+    return mapping[e_obj['type']['uri']]
+
+@qgsfunction(args='auto', group='Custom')
 def get_aanduidingsobject_titel_tekst(url, feature, parent):
     cj = browsercookie.firefox()
     e_obj = requests.get(url, headers={'Accept': 'application/json'}, cookies=cj).json()
@@ -137,18 +150,33 @@ def get_aanduidingsobject_waarden_html(url, feature, parent):
                 url = 'https://inventaris.onroerenderfgoed.be/thesaurus/waarde/' + str(waardetype) + '.json'
                 label = requests.get(url, headers={'Accept': 'application/json'}, cookies=cj).json()['term']
                 s.append(label)
-        htmlstring = '<p>' + ''.join(s) + '</p>'
+        htmlstring = '<p>' + '<br>'.join(s) + '</p>'
         return htmlstring
     else:
         return ''
-    
+		
 @qgsfunction(args='auto', group='Custom')
-def get_aanduidingsobject_type(url, feature, parent):
+def get_aanduidingsobject_waarden_tekst_html(url, feature, parent):
+    id = 'bes_bescherming.' + url.rsplit('/', 1)[-1]
+    url = 'https://inventaris.onroerenderfgoed.be/erfgoed/node/' + str(id) + '/waarden.json'
     cj = browsercookie.firefox()
-    e_obj = requests.get(url, headers={'Accept': 'application/json'}, cookies=cj).json()
-    htmlstring = '<p><b>Vastgestelde inventaris van ' + e_obj['type']['label'] + 's</b></p>'
-    return htmlstring
-    
+    waarden = requests.get(url, headers={'Accept': 'application/json'}, cookies=cj).json()
+    if 'waarden' in waarden:
+        h = ''
+        for waarde in waarden['waarden']:
+            if waarde['uiteenzetting']:
+                tekst = waarde["uiteenzetting"]
+            else:
+                tekst = ''
+            for waardetype in waarde['waardetypes']:
+                url = 'https://inventaris.onroerenderfgoed.be/thesaurus/waarde/' + str(waardetype) + '.json'
+                label = requests.get(url, headers={'Accept': 'application/json'}, cookies=cj).json()['term']
+                h =  h + '<p><b>' + label + '</b></p>'
+            h = h + '<p>' + tekst + '</p>'
+        return h
+    else:
+        return ''
+        
 @qgsfunction(args='auto', group='Custom')
 def get_aanduidingsobject_url(url, feature, parent):
     cj = browsercookie.firefox()
