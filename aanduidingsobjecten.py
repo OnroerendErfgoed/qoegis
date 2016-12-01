@@ -64,9 +64,9 @@ def get_aanduidingsobject_typologie_html(url, feature, parent):
     cj = browsercookie.firefox()
     e_obj = requests.get(url, headers={'Accept': 'application/json'}, cookies=cj).json()
     s = []
-    if 'typologie' in e_obj:
-        for term in e_obj['typologie']:
-            s.append(term['term'])
+    if 'typologie' in e_obj and len(e_obj['typologie']) > 0:
+        for naam in e_obj['typologie']:
+            s.append(naam['naam'])
         htmlstring = '<p><b>Typologie: </b>' + ', '.join(s) + '</p>'
         return htmlstring
     else:
@@ -77,9 +77,9 @@ def get_aanduidingsobject_datering_html(url, feature, parent):
     cj = browsercookie.firefox()
     e_obj = requests.get(url, headers={'Accept': 'application/json'}, cookies=cj).json()
     s = []
-    if 'datering' in e_obj:
-        for term in e_obj['datering']:
-            s.append(term['term'])
+    if 'datering' in e_obj and len(e_obj['datering']) > 0:
+        for naam in e_obj['datering']:
+            s.append(naam['naam'])
         htmlstring = '<p><b>Datering: </b>' + ', '.join(s) + '</p>'
         return htmlstring
     else:
@@ -90,9 +90,9 @@ def get_aanduidingsobject_soort_html(url, feature, parent):
     cj = browsercookie.firefox()
     e_obj = requests.get(url, headers={'Accept': 'application/json'}, cookies=cj).json()
     s = []
-    if 'soort' in e_obj:
-        for term in e_obj['soort']:
-            s.append(term['term'])
+    if 'soort' in e_obj and len(e_obj['soort']) > 0:
+        for naam in e_obj['soort']:
+            s.append(naam['naam'])
         htmlstring = '<p><b>Soort: </b>' + ', '.join(s) + '</p>'
         return htmlstring
     else:
@@ -103,9 +103,9 @@ def get_aanduidingsobject_materiaal_html(url, feature, parent):
     cj = browsercookie.firefox()
     e_obj = requests.get(url, headers={'Accept': 'application/json'}, cookies=cj).json()
     s = []
-    if 'materiaal' in e_obj:
-        for term in e_obj['materiaal']:
-            s.append(term['term'])
+    if 'materiaal' in e_obj and len(e_obj['materiaal']) > 0:
+        for naam in e_obj['materiaal']:
+            s.append(naam['naam'])
         htmlstring = '<p><b>Materiaal: </b>' + ', '.join(s) + '</p>'
         return htmlstring
     else:
@@ -116,9 +116,9 @@ def get_aanduidingsobject_context_html(url, feature, parent):
     cj = browsercookie.firefox()
     e_obj = requests.get(url, headers={'Accept': 'application/json'}, cookies=cj).json()
     s = []
-    if 'context' in e_obj:
-        for term in e_obj['context']:
-            s.append(term['term'])
+    if 'context' in e_obj and len(e_obj['context']) > 0:
+        for naam in e_obj['context']:
+            s.append(naam['naam'])
         htmlstring = '<p><b>Context: </b>' + ', '.join(s) + '</p>'
         return htmlstring
     else:
@@ -129,9 +129,9 @@ def get_aanduidingsobject_stijl_html(url, feature, parent):
     cj = browsercookie.firefox()
     e_obj = requests.get(url, headers={'Accept': 'application/json'}, cookies=cj).json()
     s = []
-    if 'stijl' in e_obj:
-        for term in e_obj['stijl']:
-            s.append(term['term'])
+    if 'stijl' in e_obj and len(e_obj['stijl']) > 0:
+        for naam in e_obj['stijl']:
+            s.append(naam['naam'])
         htmlstring = '<p><b>Stijl of cultuur: </b>' + ', '.join(s) + '</p>'
         return htmlstring
     else:
@@ -161,8 +161,8 @@ def get_aanduidingsobject_waarden_tekst_html(url, feature, parent):
     url = 'https://inventaris.onroerenderfgoed.be/erfgoed/node/' + str(id) + '/waarden.json'
     cj = browsercookie.firefox()
     waarden = requests.get(url, headers={'Accept': 'application/json'}, cookies=cj).json()
-    if 'waarden' in waarden:
-        h = ''
+    if 'waarden' in waarden and len(waarden['waarden']) > 0:
+        h = '<h4>Erfgoedwaarden</h4>'
         for waarde in waarden['waarden']:
             if waarde['uiteenzetting']:
                 tekst = waarde["uiteenzetting"]
